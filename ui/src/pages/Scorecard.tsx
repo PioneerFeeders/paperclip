@@ -121,6 +121,7 @@ export function Scorecard() {
   const [sparklines, setSparklines] = useState<Record<string, number[]>>({});
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [kpiNames, setKpiNames] = useState<Record<string, string>>({});
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
   useEffect(() => {
@@ -133,6 +134,11 @@ export function Scorecard() {
     else setLoading(true);
 
     try {
+      // Get KPI names
+      const namesRes = await fetch("/api/kpi/names");
+      const namesData = await namesRes.json();
+      setKpiNames(namesData);
+
       // Get scorecard config
       const configRes = await fetch("/api/kpi/scorecard-config");
       const configData = await configRes.json();
@@ -183,19 +189,18 @@ export function Scorecard() {
 
   if (loading) return <PageSkeleton />;
 
-  // Build a name map from KPI IDs (we'll enhance this later with the registry)
-  const kpiNames: Record<string, { name: string; category: string }> = {};
-  // For now, derive from ID prefix
+  // Build display info from KPI names registry
+  const prefixMap: Record<string, string> = {
+    SALES: "sales", QSALES: "sales", SHIP: "shipping", OPS: "operations",
+    FIN: "finance", SUP: "support", BRD: "breeding", PROD: "production",
+    WHL: "wholesale", LEAD: "leads", INB: "inbound", DMD: "demand",
+    STR: "strategic", ENG: "engineering", SEO: "seo",
+  };
+  const cardInfo: Record<string, { name: string; category: string }> = {};
   (config?.cards || []).forEach((card) => {
     const prefix = card.id.split("-")[0];
-    const prefixMap: Record<string, string> = {
-      SALES: "sales", QSALES: "sales", SHIP: "shipping", OPS: "operations",
-      FIN: "finance", SUP: "support", BRD: "breeding", PROD: "production",
-      WHL: "wholesale", LEAD: "leads", INB: "inbound", DMD: "demand",
-      STR: "strategic", ENG: "engineering", SEO: "seo",
-    };
-    kpiNames[card.id] = {
-      name: values[card.id]?.metadata?.name || card.id.replace(/-/g, " "),
+    cardInfo[card.id] = {
+      name: kpiNames[card.id] || card.id,
       category: prefixMap[prefix] || "other",
     };
   });
@@ -231,8 +236,8 @@ export function Scorecard() {
             key={card.id}
             kpiId={card.id}
             value={values[card.id]?.value ?? null}
-            name={kpiNames[card.id]?.name || card.id}
-            category={kpiNames[card.id]?.category || "other"}
+            name={cardInfo[card.id]?.name || card.id}
+            category={cardInfo[card.id]?.category || "other"}
             sparklineData={sparklines[card.id]}
           />
         ))}

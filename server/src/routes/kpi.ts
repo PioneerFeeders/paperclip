@@ -22,8 +22,50 @@ function getKeelPool() {
   return keelPool;
 }
 
+// Full KPI name registry — extracted from keel-advisors/src/config/kpi-registry.js
+const KPI_NAMES: Record<string, string> = {
+  "SALES-01": "Total Revenue This Week", "SALES-02": "Net Profit", "SALES-03": "Average Order Value (AOV)",
+  "SALES-04": "Total Number of Orders", "SALES-05": "Percent Fulfilled Today", "SALES-06": "Wholesale Revenue",
+  "QSALES-01": "Gross Revenue WTD", "QSALES-02": "Net Revenue WTD", "QSALES-03": "Hornworm Cups Sold WTD",
+  "QSALES-04": "Silkworm Cups Sold WTD", "QSALES-08": "WoW Revenue Pace", "QSALES-09": "Collected Revenue WTD",
+  "QSALES-10": "Outstanding Revenue WTD", "QSALES-11": "Last Week Revenue", "QSALES-12": "30-Day Avg Weekly Revenue",
+  "QSALES-21": "Monthly Revenue (MTD)", "QSALES-22": "Last Month Revenue",
+  "SHIP-01": "Customer Paid Shipping", "SHIP-02": "ShipStation Label Cost", "SHIP-03": "UPS Actual Bill",
+  "SHIP-04": "Shipping Bill Difference ($)", "SHIP-05": "Number of UPS Shipments", "SHIP-06": "Dimensional Corrections",
+  "SHIP-07": "UPS Correction Rate (%)", "SHIP-08": "Late Shipments", "SHIP-09": "UPS Bill as % of Revenue",
+  "SHIP-10": "Shipping Cost vs Collected Delta (%)", "SHIP-11": "Avg Transit Time (Days)",
+  "SHIP-13": "Carrier Performance Score", "SHIP-15": "UPS Guaranteed Late Shipments",
+  "SHIP-16": "UPS Claim Refund Potential ($)", "SHIP-18": "Shipping Coverage Ratio (%)",
+  "SHIP-20": "On-Time Delivery Rate (%)", "SHIP-31": "Total Shipments Last Week",
+  "FIN-01": "Liquidity Rate", "FIN-02": "Payouts Received (WTD)", "FIN-03": "Total Payouts (EOW)",
+  "FIN-04": "Weekly Payroll Total", "FIN-05": "Payroll as % of Revenue",
+  "FIN-11": "Customer Shipping Revenue LW", "FIN-13": "Label Cost LW", "FIN-15": "UPS Actual Billed LW",
+  "FIN-17": "Shipping Margin LW", "FIN-19": "Label vs Billed Gap LW",
+  "SUP-01": "Support Tickets This Week", "SUP-02": "Open Tickets", "SUP-03": "Weekly DOA Rate (%)",
+  "SUP-04": "Monthly DOA Rate (%)", "SUP-05": "Lifetime DOA Rate (%)",
+  "OPS-01": "Hornworm Cups Poured This Week", "OPS-01B": "Cups Poured Last Week",
+  "OPS-02": "Monday Queue Size", "OPS-06": "Weekly Clearance Rate (%)", "OPS-07": "Unshipped Queue",
+  "BRD-01": "Hornworm Egg Harvest (Grams)", "BRD-02": "Pre-Pupae Collected", "BRD-03": "Pre-Pupae Survival Rate",
+  "BRD-04": "Egg Production Prediction", "BRD-05": "Eggs Harvested (Count)",
+  "PROD-01": "Hornworm Cups Sold (All)", "PROD-02": "Hornworm Cups — Chewy", "PROD-03": "Hornworm Cups — Amazon",
+  "PROD-04": "Hornworm Cups — Wholesale", "PROD-05": "Hornworm Cups — DTC", "PROD-06": "Silkworm Cups Sold (All)",
+  "WHL-01": "Total Wholesale Customers", "WHL-02": "Active Wholesale Customers", "WHL-03": "New Wholesale This Week",
+  "DMD-01": "Chewy Forecast (Next Month)", "DMD-02": "Shopify Weekly Cup Sales", "DMD-03": "Production vs Demand Gap",
+  "INB-01": "Active Inbound Shipments", "LEAD-01": "Enriched Wholesale Leads",
+  "STR-01": "Channel Revenue Mix", "ENG-01": "KEEL Kernel Status",
+  "SEO-01": "SEO Health Score", "SEO-09": "Keywords in Top 10", "SEO-10": "Organic Search Traffic",
+};
+
 export function kpiRoutes() {
   const router = Router();
+
+  /**
+   * GET /kpi/names
+   * Returns the full KPI name registry
+   */
+  router.get("/kpi/names", (_req, res) => {
+    res.json(KPI_NAMES);
+  });
 
   /**
    * GET /kpi/registry
