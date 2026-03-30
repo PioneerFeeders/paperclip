@@ -130,73 +130,61 @@ export function kpiRoutes() {
 
   /**
    * GET /kpi/scorecard-config
-   * Get saved scorecard configuration (which KPIs to show)
+   * Get scorecard configuration from advisors.scorecard_configs table
+   * Each row = one KPI card: { kpi_id, section_label, engine, display_order }
    */
   router.get("/kpi/scorecard-config", async (_req, res) => {
     try {
       const pool = getKeelPool();
       if (!pool) {
-        // Return default config
         return res.json({
           cards: [
             { id: "SALES-01", size: "1x1" },
             { id: "SALES-02", size: "1x1" },
-            { id: "SALES-03", size: "1x1" },
             { id: "SHIP-01", size: "1x1" },
-            { id: "SHIP-02", size: "1x1" },
             { id: "FIN-01", size: "1x1" },
             { id: "SUP-01", size: "1x1" },
             { id: "OPS-01", size: "1x1" },
-            { id: "BRD-01", size: "1x1" },
-            { id: "PROD-01", size: "1x1" },
           ],
         });
       }
 
       const result = await pool.query(
-        `SELECT config FROM advisors.scorecard_configs WHERE id = 'default' LIMIT 1`,
+        `SELECT kpi_id, section_label, engine, display_order
+         FROM advisors.scorecard_configs
+         WHERE is_active = true AND scorecard_type = 'pulse'
+         ORDER BY display_order ASC`,
       );
 
       if (result.rows.length > 0) {
-        res.json(result.rows[0].config);
-      } else {
-        // Default scorecard
         res.json({
-          cards: [
-            { id: "SALES-01", size: "1x1" },
-            { id: "SALES-02", size: "1x1" },
-            { id: "SHIP-01", size: "1x1" },
-            { id: "FIN-01", size: "1x1" },
-            { id: "SUP-01", size: "1x1" },
-            { id: "OPS-01", size: "1x1" },
-          ],
+          cards: result.rows.map((r) => ({
+            id: r.kpi_id,
+            section: r.section_label,
+            engine: r.engine,
+            order: r.display_order,
+            size: "1x1",
+          })),
+        });
+      } else {
+        // Fallback: get all active scorecard entries regardless of type
+        const allResult = await pool.query(
+          `SELECT kpi_id, section_label, engine, display_order, scorecard_type
+           FROM advisors.scorecard_configs
+           WHERE is_active = true
+           ORDER BY display_order ASC`,
+        );
+
+        res.json({
+          cards: allResult.rows.map((r) => ({
+            id: r.kpi_id,
+            section: r.section_label,
+            engine: r.engine,
+            order: r.display_order,
+            size: "1x1",
+          })),
         });
       }
-    } catch (err: any) {
-      res.status(500).json({ error: err.message });
-    }
-  });
-
-  /**
-   * POST /kpi/scorecard-config
-   * Save scorecard configuration
-   */
-  router.post("/kpi/scorecard-config", async (req, res) => {
-    try {
-      const pool = getKeelPool();
-      if (!pool) {
-        return res.status(503).json({ error: "KEEL_DATABASE_URL not configured" });
-      }
-
-      const config = req.body;
-      await pool.query(
-        `INSERT INTO advisors.scorecard_configs (id, config, updated_at)
-         VALUES ('default', $1, NOW())
-         ON CONFLICT (id) DO UPDATE SET config = $1, updated_at = NOW()`,
-        [JSON.stringify(config)],
-      );
-
-      res.json({ ok: true });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }
