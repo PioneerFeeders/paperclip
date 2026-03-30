@@ -62,10 +62,10 @@ export function kpiRoutes() {
 
       // Query KPI snapshots from KEEL advisors schema
       const result = await pool.query(
-        `SELECT kpi_id, value, recorded_at, metadata
+        `SELECT kpi_id, actual_value, snapshot_date, rag_status, rag_color, owner_advisor, target_value
          FROM advisors.kpi_snapshots
          WHERE kpi_id = ANY($1)
-         ORDER BY recorded_at DESC`,
+         ORDER BY snapshot_date DESC`,
         [ids],
       );
 
@@ -75,9 +75,12 @@ export function kpiRoutes() {
         if (!latest[row.kpi_id]) {
           latest[row.kpi_id] = {
             id: row.kpi_id,
-            value: row.value,
-            recordedAt: row.recorded_at,
-            metadata: row.metadata,
+            value: row.actual_value,
+            recordedAt: row.snapshot_date,
+            ragStatus: row.rag_status,
+            ragColor: row.rag_color,
+            owner: row.owner_advisor,
+            target: row.target_value,
           };
         }
       }
@@ -108,10 +111,10 @@ export function kpiRoutes() {
       }
 
       const result = await pool.query(
-        `SELECT kpi_id, value, recorded_at
+        `SELECT kpi_id, actual_value, snapshot_date
          FROM advisors.kpi_snapshots
-         WHERE kpi_id = $1 AND recorded_at >= NOW() - INTERVAL '${days} days'
-         ORDER BY recorded_at ASC`,
+         WHERE kpi_id = $1 AND snapshot_date >= CURRENT_DATE - INTERVAL '${days} days'
+         ORDER BY snapshot_date ASC`,
         [id],
       );
 
@@ -119,8 +122,8 @@ export function kpiRoutes() {
         id,
         days,
         points: result.rows.map((r) => ({
-          value: parseFloat(r.value),
-          date: r.recorded_at,
+          value: parseFloat(r.actual_value),
+          date: r.snapshot_date,
         })),
       });
     } catch (err: any) {
