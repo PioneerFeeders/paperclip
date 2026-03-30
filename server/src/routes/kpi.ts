@@ -235,6 +235,53 @@ export function kpiRoutes() {
     }
   });
 
+  /**
+   * POST /kpi/scorecard-config
+   * Save scorecard configuration — replaces all cards atomically
+   * Body: { cards: [{ id: "SALES-01", size: "1x1" }, ...] }
+   */
+  router.post("/kpi/scorecard-config", async (req, res) => {
+    try {
+      const pool = getKeelPool();
+      if (!pool) {
+        return res.status(503).json({ error: "KEEL_DATABASE_URL not configured" });
+      }
+
+      const { cards } = req.body;
+      if (!Array.isArray(cards)) {
+        return res.status(400).json({ error: "cards array required" });
+      }
+
+      // Delete existing config for this owner
+      await pool.query(
+        `DELETE FROM advisors.scorecard_configs WHERE scorecard_owner = 'justin'`,
+      );
+
+      // Insert new cards with display_order
+      for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        const prefix = card.id.split("-")[0];
+        const engineMap: Record<string, string> = {
+          SALES: "growth", QSALES: "growth", SHIP: "fulfillment", OPS: "fulfillment",
+          FIN: "finance", SUP: "infrastructure", BRD: "fulfillment", PROD: "fulfillment",
+          WHL: "growth", LEAD: "growth", INB: "fulfillment", DMD: "fulfillment",
+          STR: "growth", ENG: "infrastructure", SEO: "growth",
+        };
+
+        await pool.query(
+          `INSERT INTO advisors.scorecard_configs
+           (scorecard_type, scorecard_owner, kpi_id, section_label, engine, display_order, is_active)
+           VALUES ($1, $2, $3, $4, $5, $6, true)`,
+          ["pulse", "justin", card.id, prefix, engineMap[prefix] || "growth", i + 1],
+        );
+      }
+
+      res.json({ ok: true, saved: cards.length });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
   return router;
 }
 

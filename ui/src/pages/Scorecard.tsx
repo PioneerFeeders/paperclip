@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useBreadcrumbs } from "../context/BreadcrumbContext";
-import { BarChart3, TrendingUp, TrendingDown, Minus, RefreshCw } from "lucide-react";
+import { Link } from "@/lib/router";
+import { BarChart3, TrendingUp, TrendingDown, Minus, RefreshCw, Pencil } from "lucide-react";
 import { PageSkeleton } from "../components/PageSkeleton";
 
 // Category colors (zone-based)
@@ -219,14 +220,23 @@ export function Scorecard() {
             {lastUpdated && <span className="ml-2">· Updated {lastUpdated}</span>}
           </p>
         </div>
-        <button
-          onClick={() => loadData(true)}
-          disabled={refreshing}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`} />
-          Refresh
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            to="../scorecard-builder"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border border-border hover:bg-accent transition-colors no-underline text-inherit"
+          >
+            <Pencil className="w-3.5 h-3.5" />
+            Edit
+          </Link>
+          <button
+            onClick={() => loadData(true)}
+            disabled={refreshing}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? "animate-spin" : ""}`} />
+            Refresh
+          </button>
+        </div>
       </div>
 
       {/* KPI Grid */}
