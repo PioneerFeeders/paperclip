@@ -121,7 +121,7 @@ function CloudAccessGate() {
 function boardRoutes() {
   return (
     <>
-      <Route index element={<Navigate to="scorecard" replace />} />
+      <Route index element={<Navigate to="dashboard" replace />} />
       <Route path="dashboard" element={<Dashboard />} />
       <Route path="scorecard" element={<Scorecard />} />
       <Route path="scorecard-builder" element={<ScorecardBuilder />} />
