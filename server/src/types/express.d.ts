@@ -1,5 +1,6 @@
-// Type augmentation for Express Request — adds actor property set by auth middleware
-declare namespace Express {
+import "express";
+
+declare module "express-serve-static-core" {
   interface Request {
     actor: {
       type: "board" | "agent" | "none";
