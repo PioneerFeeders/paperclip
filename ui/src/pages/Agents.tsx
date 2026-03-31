@@ -235,8 +235,8 @@ export function Agents() {
                 subtitle={<span className="text-xs text-muted-foreground whitespace-normal leading-snug">{agent.title || (roleLabels[agent.role] ?? agent.role)}</span>}
                 to={agentUrl(agent)}
                 leading={
-                  agent.icon ? (
-                    <img src={`/api/assets/${agent.icon}`} alt={agent.name} className="w-9 h-9 rounded-full object-cover" />
+                  (agent.metadata as any)?.avatarAssetId ? (
+                    <img src={`/api/assets/${(agent.metadata as any).avatarAssetId}/content`} alt={agent.name} className="w-9 h-9 rounded-full object-cover" />
                   ) : (
                     <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white ${agentStatusDot[agent.status]?.includes("green") ? "bg-green-600" : agentStatusDot[agent.status]?.includes("yellow") ? "bg-yellow-600" : "bg-zinc-600"}`}>
                       {agent.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()}
@@ -333,8 +333,8 @@ function OrgTreeNode({
         to={agent ? agentUrl(agent) : `/agents/${node.id}`}
         className="flex items-center gap-3 px-3 py-2 hover:bg-accent/30 transition-colors w-full text-left no-underline text-inherit"
       >
-        {agent?.icon ? (
-          <img src={`/api/assets/${agent.icon}`} alt={node.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
+        {(agent?.metadata as any)?.avatarAssetId ? (
+          <img src={`/api/assets/${(agent.metadata as any).avatarAssetId}/content`} alt={node.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
         ) : (
           <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0 ${statusColor.includes("green") ? "bg-green-600" : statusColor.includes("yellow") ? "bg-yellow-600" : "bg-zinc-600"}`}>
             {node.name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase()}
