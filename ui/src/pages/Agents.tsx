@@ -231,15 +231,17 @@ export function Agents() {
             return (
               <EntityRow
                 key={agent.id}
-                title={agent.name}
-                subtitle={`${roleLabels[agent.role] ?? agent.role}${agent.title ? ` - ${agent.title}` : ""}`}
+                title={<span><span className="font-bold uppercase tracking-wide">{agent.name}</span></span>}
+                subtitle={<span className="text-xs text-muted-foreground whitespace-normal leading-snug">{agent.title || (roleLabels[agent.role] ?? agent.role)}</span>}
                 to={agentUrl(agent)}
                 leading={
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span
-                      className={`absolute inline-flex h-full w-full rounded-full ${agentStatusDot[agent.status] ?? agentStatusDotDefault}`}
-                    />
-                  </span>
+                  agent.icon ? (
+                    <img src={`/api/assets/${agent.icon}`} alt={agent.name} className="w-9 h-9 rounded-full object-cover" />
+                  ) : (
+                    <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white ${agentStatusDot[agent.status]?.includes("green") ? "bg-green-600" : agentStatusDot[agent.status]?.includes("yellow") ? "bg-yellow-600" : "bg-zinc-600"}`}>
+                      {agent.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()}
+                    </div>
+                  )
                 }
                 trailing={
                   <div className="flex items-center gap-3">
@@ -331,15 +333,18 @@ function OrgTreeNode({
         to={agent ? agentUrl(agent) : `/agents/${node.id}`}
         className="flex items-center gap-3 px-3 py-2 hover:bg-accent/30 transition-colors w-full text-left no-underline text-inherit"
       >
-        <span className="relative flex h-2.5 w-2.5 shrink-0">
-          <span className={`absolute inline-flex h-full w-full rounded-full ${statusColor}`} />
-        </span>
+        {agent?.icon ? (
+          <img src={`/api/assets/${agent.icon}`} alt={node.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
+        ) : (
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0 ${statusColor.includes("green") ? "bg-green-600" : statusColor.includes("yellow") ? "bg-yellow-600" : "bg-zinc-600"}`}>
+            {node.name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase()}
+          </div>
+        )}
         <div className="flex-1 min-w-0">
-          <span className="text-sm font-medium">{node.name}</span>
-          <span className="text-xs text-muted-foreground ml-2">
-            {roleLabels[node.role] ?? node.role}
-            {agent?.title ? ` - ${agent.title}` : ""}
-          </span>
+          <span className="text-sm font-bold uppercase tracking-wide">{node.name}</span>
+          <div className="text-xs text-muted-foreground whitespace-normal leading-snug">
+            {agent?.title || (roleLabels[node.role] ?? node.role)}
+          </div>
         </div>
         <div className="flex items-center gap-3 shrink-0">
           <span className="sm:hidden">
