@@ -808,8 +808,8 @@ export function AgentDetail() {
       {/* Header */}
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-3 min-w-0">
-          {(agent.metadata as any)?.avatarAssetId ? (
-            <img src={`/api/assets/${(agent.metadata as any).avatarAssetId}/content`} alt={agent.name} className="shrink-0 h-12 w-12 rounded-lg object-cover" />
+          {(agent.metadata as any)?.avatarUrl ? (
+            <img src={(agent.metadata as any).avatarUrl} alt={agent.name} className="shrink-0 h-12 w-12 rounded-lg object-cover" />
           ) : (
             <AgentIconPicker
               value={agent.icon}
