@@ -231,8 +231,8 @@ export function Agents() {
             return (
               <EntityRow
                 key={agent.id}
-                title={<span><span className="font-bold uppercase tracking-wide">{agent.name}</span></span>}
-                subtitle={<span className="text-xs text-muted-foreground whitespace-normal leading-snug">{agent.title || (roleLabels[agent.role] ?? agent.role)}</span>}
+                title={agent.name.toUpperCase()}
+                subtitle={agent.title || (roleLabels[agent.role] ?? agent.role)}
                 to={agentUrl(agent)}
                 leading={
                   (agent.metadata as any)?.avatarAssetId ? (
@@ -334,7 +334,7 @@ function OrgTreeNode({
         className="flex items-center gap-3 px-3 py-2 hover:bg-accent/30 transition-colors w-full text-left no-underline text-inherit"
       >
         {(agent?.metadata as any)?.avatarAssetId ? (
-          <img src={`/api/assets/${(agent.metadata as any).avatarAssetId}/content`} alt={node.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
+          <img src={`/api/assets/${(agent!.metadata as any).avatarAssetId}/content`} alt={node.name} className="w-8 h-8 rounded-full object-cover shrink-0" />
         ) : (
           <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0 ${statusColor.includes("green") ? "bg-green-600" : statusColor.includes("yellow") ? "bg-yellow-600" : "bg-zinc-600"}`}>
             {node.name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase()}
