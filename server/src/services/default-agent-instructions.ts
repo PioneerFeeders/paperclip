@@ -10,6 +10,7 @@ const DEFAULT_AGENT_BUNDLE_FILES = {
   support: ["AGENTS.md"],
   "supply-chain": ["AGENTS.md"],
   marketing: ["AGENTS.md"],
+  "cold-email": ["AGENTS.md"],
 } as const;
 
 type DefaultAgentBundleRole = keyof typeof DEFAULT_AGENT_BUNDLE_FILES;
