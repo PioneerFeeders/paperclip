@@ -87,6 +87,38 @@ export async function createApp(
     },
   }));
   app.use(httpLogger);
+
+  // Public widget endpoint — no auth required, returns inbox summary only
+  app.get("/api/widget/inbox/:companyId", async (req, res) => {
+    try {
+      const companyId = req.params.companyId;
+      const { sql } = await import("drizzle-orm");
+      const result = await db.execute(sql`
+        SELECT
+          (SELECT count(*) FROM approvals WHERE company_id = ${companyId} AND status = 'pending') as pending_approvals,
+          (SELECT count(*) FROM agents WHERE company_id = ${companyId} AND status != 'terminated') as total_agents,
+          (SELECT count(*) FROM agents WHERE company_id = ${companyId} AND status IN ('idle','running','active')) as active_agents,
+          (SELECT count(*) FROM agents WHERE company_id = ${companyId} AND status = 'error') as error_agents
+      `);
+      const row = result.rows?.[0] || result[0] || {};
+      const approvalRows = await db.execute(sql`
+        SELECT payload->>'name' as name FROM approvals
+        WHERE company_id = ${companyId} AND status = 'pending' LIMIT 4
+      `);
+      const items = (approvalRows.rows || approvalRows || []).map((a: any) => ({ type: "approval", title: a.name || "Approval pending" }));
+      res.json({
+        approvals: Number(row.pending_approvals || 0),
+        failed_runs: Number(row.error_agents || 0),
+        mentions: 0,
+        total_agents: Number(row.total_agents || 0),
+        active_agents: Number(row.active_agents || 0),
+        updated: new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", timeZone: "America/Chicago" }),
+        items,
+      });
+    } catch (e) {
+      res.json({ approvals: 0, failed_runs: 0, mentions: 0, total_agents: 0, active_agents: 0, updated: "--:--", items: [] });
+    }
+  });
   const privateHostnameGateEnabled =
     opts.deploymentMode === "authenticated" && opts.deploymentExposure === "private";
   const privateHostnameAllowSet = resolvePrivateHostnameAllowSet({

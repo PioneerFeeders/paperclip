@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">KEEL Dashboard</string>
+    <string name="title_activity_main">KEEL Dashboard</string>
+    <string name="package_name">com.pioneerfeeders.keeldashboard</string>
+    <string name="custom_url_scheme">com.pioneerfeeders.keeldashboard</string>
+    <string name="widget_description">KEEL AI inbox — approvals, failed runs, mentions</string>
+</resources>

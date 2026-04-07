@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="14dp"
+    android:background="@drawable/widget_bg">
+
+    <!-- Header Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="KEEL"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="#85CFFF"
+                android:layout_marginEnd="6dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Inbox"
+                android:textSize="15sp"
+                android:textColor="#D6E3FA" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/widget_updated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="--:--"
+            android:textSize="9sp"
+            android:textColor="#64748B" />
+    </LinearLayout>
+
+    <!-- Count + Status -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/widget_inbox_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:textColor="#34D399"
+            android:layout_marginEnd="12dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/widget_inbox_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ALL CLEAR"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#34D399" />
+
+            <TextView
+                android:id="@+id/widget_agents_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0/0 agents active"
+                android:textSize="10sp"
+                android:textColor="#94A3B8" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Stats Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/widget_approvals"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="0 approvals"
+            android:textSize="10sp"
+            android:textColor="#FFB86C"
+            android:background="@drawable/stat_bg"
+            android:padding="6dp"
+            android:gravity="center"
+            android:layout_marginEnd="4dp" />
+
+        <TextView
+            android:id="@+id/widget_failed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="0 failed"
+            android:textSize="10sp"
+            android:textColor="#F87171"
+            android:background="@drawable/stat_bg"
+            android:padding="6dp"
+            android:gravity="center"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp" />
+
+        <TextView
+            android:id="@+id/widget_mentions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="0 mentions"
+            android:textSize="10sp"
+            android:textColor="#85CFFF"
+            android:background="@drawable/stat_bg"
+            android:padding="6dp"
+            android:gravity="center"
+            android:layout_marginStart="4dp" />
+    </LinearLayout>
+
+    <!-- Items List -->
+    <TextView
+        android:id="@+id/widget_items"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="No pending items"
+        android:textSize="11sp"
+        android:textColor="#BEC8D1"
+        android:lineSpacingExtra="4dp" />
+
+</LinearLayout>
