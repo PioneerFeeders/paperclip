@@ -18,7 +18,7 @@ import java.net.URL;
 
 public class InboxWidgetProvider extends AppWidgetProvider {
 
-    private static final String API_URL = "https://lively-learning-production-0ca0.up.railway.app/api/widget/inbox/070591cc-89ac-4c59-9b8e-55d351a56d90";
+    private static final String API_URL = "https://lively-learning-production-0ca0.up.railway.app/api/public/widget-inbox/070591cc-89ac-4c59-9b8e-55d351a56d90";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
