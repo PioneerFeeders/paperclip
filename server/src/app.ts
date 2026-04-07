@@ -89,7 +89,7 @@ export async function createApp(
   app.use(httpLogger);
 
   // Public widget endpoint — no auth required, returns inbox summary only
-  app.get("/api/public/widget-inbox/:companyId", async (req, res) => {
+  app.get("/widget-inbox/:companyId", async (req, res) => {
     try {
       const companyId = req.params.companyId;
       const { sql } = await import("drizzle-orm");
