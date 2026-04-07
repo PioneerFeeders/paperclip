@@ -279,7 +279,9 @@ export async function createApp(
     if (uiDist) {
       const indexHtml = applyUiBranding(fs.readFileSync(path.join(uiDist, "index.html"), "utf-8"));
       app.use(express.static(uiDist));
-      app.get(/.*/, (_req, res) => {
+      app.get(/.*/, (req, res, next) => {
+        // Skip SPA fallback for widget endpoints
+        if (req.path.startsWith("/widget-inbox")) return next();
         res.status(200).set("Content-Type", "text/html").end(indexHtml);
       });
     } else {
